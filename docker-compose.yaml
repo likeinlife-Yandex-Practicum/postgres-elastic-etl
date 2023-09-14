@@ -1,0 +1,56 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # - ./postgres/data:/var/lib/postgresql/data
+      - ./inserts.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+    ports:
+      - '5432:5432'
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  elastic:
+    image: elasticsearch:8.6.2
+    healthcheck:
+      test: curl -f 127.0.0.1:9200 || exit 1
+      interval: 10s
+      timeout: 10s
+    depends_on:
+      - postgres
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms200m -Xmx200m"
+    ports:
+      - '9200:9200'
+
+  elastic_index_maker:
+    build: src/es_index_maker
+    environment:
+      - HOST=${ES_HOST}
+      - PORT=${ES_PORT}
+    depends_on:
+      elastic:
+        condition: service_healthy
+
+  etl:
+    build: src/etl
+    depends_on:
+      elastic:
+        condition: service_healthy
+      elastic_index_maker:
+        condition: service_started
+      postgres:
+        condition: service_started
+    env_file:
+      - .env
