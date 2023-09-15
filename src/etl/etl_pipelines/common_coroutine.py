@@ -4,6 +4,7 @@ from typing import Generator
 import common.logger as _logger
 from common.coroutine import coroutine
 from enums.db_table import DBTable
+from models import ElasticBaseModel
 from psycopg2.extensions import connection
 from psycopg2.extras import DictCursor
 from state.state import ModifiedState
@@ -31,3 +32,20 @@ def fetch_changed(
         while results := cursor.fetchmany(size=100):
             next_node.send(results)
             state.update_last_modified_time(results[-1].get('modified'))
+
+
+@coroutine
+def es_transformer(
+    next_node: Generator,
+    transform_model: type[ElasticBaseModel],
+) -> Generator[None, list[dict], None]:
+    while dicts := (yield):
+        batch = []
+        for _dict in dicts:
+            try:
+                transformed = transform_model(**_dict)
+                batch.append(transformed)
+            except Exception as e:
+                logger.error('Cant parse row %s, %s', _dict, e, exc_info=True)
+        logger.info(f'Successfully loaded from postgres {len(batch)} to {transform_model}')
+        next_node.send(batch)

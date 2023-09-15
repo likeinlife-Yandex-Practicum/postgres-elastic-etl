@@ -1,7 +1,6 @@
 from typing import Generator
 
 from common import coroutine, get_logger
-from models import FilmWork
 from psycopg2.extensions import connection
 
 logger = get_logger(__name__)
@@ -81,17 +80,3 @@ def get_filmwork_by_id(session: connection, next_node: Generator) -> Generator[N
 
         while results := cursor.fetchmany(size=100):
             next_node.send(results)
-
-
-@coroutine
-def transform_filmworks(next_node: Generator) -> Generator[None, list[dict], None]:
-    while movie_dicts := (yield):
-        batch = []
-        for movie_dict in movie_dicts:
-            try:
-                movie = FilmWork(**movie_dict)
-                batch.append(movie)
-            except Exception as e:
-                logger.error('Cant parse row %s, %s', movie_dict, e, exc_info=True)
-        logger.info(f'Successfully loaded from postgres {len(batch)} movies')
-        next_node.send(batch)
