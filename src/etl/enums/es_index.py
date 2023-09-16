@@ -3,5 +3,5 @@ from enum import Enum
 
 class ESIndex(Enum):
     PERSON = 'person'
-    FILMWORK = 'movies'
+    FILMWORK = 'movie'
     GENRE = 'genre'

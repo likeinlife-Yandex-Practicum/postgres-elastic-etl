@@ -1,0 +1,1 @@
+{"genre":{"mappings":{"dynamic":"strict","properties":{"description":{"type":"text","analyzer":"ru_en"},"id":{"type":"keyword"},"movies":{"type":"nested","dynamic":"strict","properties":{"id":{"type":"keyword"},"imdb_rating":{"type":"float"},"title":{"type":"text","analyzer":"ru_en"}}},"name":{"type":"keyword"}}}}}
