@@ -20,26 +20,29 @@ ETL для курса Яндекс Практикум middle-python-разраб
 
 ```
 {
-    id: string,
+    id: uuid,
     imdb_rating: float,
-    genre: [string],
+    genre: {
+        id: uuid,
+        name: str
+    },
     title: string,
     description: string,
     directors: [
         {
-            id: string,
+            id: uuid,
             name: string
         }
     ],
     actors: [
         {
-            id: string,
+            id: uuid,
             name: string
         }
     ],
     writers: [
         {
-            id: string,
+            id: uuid,
             name: string
         }
     ]
@@ -52,12 +55,12 @@ ETL для курса Яндекс Практикум middle-python-разраб
 
 ```
 {
-    id: string,
+    id: uuid,
     name: string,
     description: string,
     movies: [
         {
-            id: string,
+            id: uuid,
             title: string,
             imdb_rating: float
         }
@@ -71,11 +74,11 @@ ETL для курса Яндекс Практикум middle-python-разраб
 
 ```
 {
-    id: string,
+    id: uuid,
     name: string,
     movies: [
         {
-            id: string,
+            id: uuid,
             title: string,
             roles: [string]
         }

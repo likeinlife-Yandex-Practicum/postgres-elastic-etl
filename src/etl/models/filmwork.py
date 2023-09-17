@@ -16,7 +16,7 @@ class FilmWork(ElasticBaseModel):
     type: str
 
     persons: list[dict]
-    genres: list[str]
+    genres: list[dict]
 
     def model_post_init(self, __context: Any) -> None:
         self.actors: list[dict] = []
