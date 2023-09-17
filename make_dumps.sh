@@ -3,12 +3,12 @@ types=("analyzer" "mapping" "data")
 es_host="127.0.0.1:9200"
 directory="dumps"
 
-index_len=${#indexes[@]}
+len=3
 mkdir ${directory}
 
 for index in ${indexes[@]}
 do
-    for ((i=0; i<$index_len; i++))
+    for ((i=0; i<$len; i++))
     do
         es_index=http://${es_host}/${index}
         type=${types[i]}
