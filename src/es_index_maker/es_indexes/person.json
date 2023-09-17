@@ -59,7 +59,7 @@
                         "type": "text",
                         "analyzer": "ru_en"
                     },
-                    "role": {
+                    "roles": {
                         "type": "keyword"
                     }
                 }
