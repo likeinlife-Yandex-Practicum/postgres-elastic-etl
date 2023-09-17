@@ -20,7 +20,7 @@ class FilmWork(ElasticBaseModel):
 
     def model_post_init(self, __context: Any) -> None:
         self.actors: list[dict] = []
-        self.directors: list[str] = []
+        self.directors: list[dict] = []
         self.writers: list[dict] = []
 
         for person in self.persons:
@@ -28,14 +28,11 @@ class FilmWork(ElasticBaseModel):
                 case PersonRole.ACTOR.value:
                     self.actors.append({'id': person['id'], 'name': person['name']})
                 case PersonRole.DIRECTOR.value:
-                    self.directors.append(person['name'])
+                    self.directors.append({'id': person['id'], 'name': person['name']})
                 case PersonRole.WRITER.value:
                     self.writers.append({'id': person['id'], 'name': person['name']})
                 case _:
                     raise errors.WrongRoleError(person)
-
-        self.actors_names = [actor.get('name') for actor in self.actors]
-        self.writers_names = [writer.get('name') for writer in self.writers]
 
     def to_elastic(self) -> dict:
         return {
@@ -44,9 +41,7 @@ class FilmWork(ElasticBaseModel):
             'description': self.description,
             'imdb_rating': self.rating,
             'genre': self.genres,
-            'director': self.directors,
-            'actors_names': self.actors_names,
-            'writers_names': self.writers_names,
+            'directors': self.directors,
             'actors': self.actors,
             'writers': self.writers,
         }
