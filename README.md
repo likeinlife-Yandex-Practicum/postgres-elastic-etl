@@ -25,9 +25,12 @@ ETL для курса Яндекс Практикум middle-python-разраб
     genre: [string],
     title: string,
     description: string,
-    director: [string],
-    actors_names: [string],
-    writers_names: [string],
+    directors: [
+        {
+            id: string,
+            name: string
+        }
+    ],
     actors: [
         {
             id: string,
@@ -74,7 +77,7 @@ ETL для курса Яндекс Практикум middle-python-разраб
         {
             id: string,
             title: string,
-            role: string
+            roles: [string]
         }
     ]
 }

@@ -35,7 +35,9 @@ def get_persons(session: connection, next_node: Generator) -> Generator[None, li
                     DISTINCT jsonb_build_object(
                         'id', fw.id,
                         'title', fw.title,
-                        'role', pfw.role
+                        'roles', (SELECT json_agg(in_pfw.role)
+                                FROM content.person_film_work in_pfw
+                                where p.id = in_pfw.person_id AND fw.id = in_pfw.film_work_id)
                     )
                 ) as movies
                 FROM content.person p
@@ -43,7 +45,6 @@ def get_persons(session: connection, next_node: Generator) -> Generator[None, li
                 JOIN content.film_work fw ON pfw.film_work_id = fw.id
                 WHERE p.id IN %s
                 GROUP BY p.id;'''
-        # [ ] Роли не группируются.
         cursor.execute(sql, (_ids,))
 
         while results := cursor.fetchmany(size=100):

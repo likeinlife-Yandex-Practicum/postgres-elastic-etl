@@ -3,13 +3,13 @@ from .base import ElasticBaseModel
 
 class InnerFilmWork(ElasticBaseModel):
     title: str
-    role: str
+    roles: list[str]
 
     def to_elastic(self) -> dict:
         return {
             'id': str(self.id),
             'title': self.title,
-            'role': self.role,
+            'roles': self.roles,
         }
 
 
