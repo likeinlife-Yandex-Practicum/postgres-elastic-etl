@@ -1,1 +1,1 @@
-{"person":{"mappings":{"dynamic":"strict","properties":{"id":{"type":"keyword"},"movies":{"type":"nested","dynamic":"strict","properties":{"id":{"type":"keyword"},"roles":{"type":"keyword"},"title":{"type":"text","analyzer":"ru_en"}}},"name":{"type":"keyword"}}}}}
+{"person":{"mappings":{"dynamic":"strict","properties":{"id":{"type":"keyword"},"movies":{"type":"nested","dynamic":"strict","properties":{"id":{"type":"keyword"},"roles":{"type":"keyword"},"title":{"type":"text","analyzer":"ru_en"}}},"name":{"type":"text","analyzer":"ru_en"}}}}}
