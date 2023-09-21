@@ -8,22 +8,7 @@ logger = get_logger(__name__)
 
 @coroutine
 def get_persons(session: connection, next_node: Generator) -> Generator[None, list[dict], None]:
-    """
-    Get persons info.
-
-    Sends: list[dict] with format:
-        [
-            id: str,
-            name: str,
-            movies: [
-                {
-                id: str,
-                title: str,
-                role: str
-                }
-            ]
-        ]
-    """
+    """Get persons info."""
     while genre_dicts := (yield):
         cursor = session.cursor()
         logger.info('Fetching persons')
@@ -35,6 +20,7 @@ def get_persons(session: connection, next_node: Generator) -> Generator[None, li
                     DISTINCT jsonb_build_object(
                         'id', fw.id,
                         'title', fw.title,
+                        'imdb_rating', fw.rating,
                         'roles', (SELECT json_agg(in_pfw.role)
                                 FROM content.person_film_work in_pfw
                                 where p.id = in_pfw.person_id AND fw.id = in_pfw.film_work_id)

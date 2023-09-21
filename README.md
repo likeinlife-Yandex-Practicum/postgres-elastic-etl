@@ -80,6 +80,7 @@ ETL для курса Яндекс Практикум middle-python-разраб
         {
             id: uuid,
             title: string,
+            imdb_rating: float,
             roles: [string]
         }
     ]
